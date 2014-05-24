@@ -1,5 +1,5 @@
 {
-  "name": "spawner",
+  "name": "promise-spawner",
   "version": "0.0.1",
   "description": "Promise multiple spawner with stdout/stderr streams and error handling",
   "main": "index.js",
