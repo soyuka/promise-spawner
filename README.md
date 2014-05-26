@@ -51,7 +51,7 @@ spawner
 	//this will print "hello\n world\n err\n done\n" to the stdout
 	.spawn(['echo hello', 'echo world'], 'echo err >&2', ['sleep 0', 'echo done && exit 0'])
 	.then(function(code) {
-		exepect(this.data.err[0]).to.equal('err')
+		expect(this.data.err[0]).to.equal('err')
 
 		return spawner.spawn('echo next')
 	})
