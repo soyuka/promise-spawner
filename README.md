@@ -44,8 +44,8 @@ var modifiers = {
 var spawner = new Spawner(modifiers)
 
 //spawner gives you global streams from spawned stdout and stderr
-spawner.out.pipe(stdout)
-spawner.err.pipe(stdout)
+spawner.out.pipe(process.stdout)
+spawner.err.pipe(process.stdout)
 
 spawner
 	//this will print "hello\n world\n err\n done\n" to the stdout
@@ -95,5 +95,4 @@ spawner
 > LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 > OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 > SOFTWARE.
-> 
 > 
