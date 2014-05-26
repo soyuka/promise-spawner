@@ -51,14 +51,18 @@ spawner
 	//this will print "hello\n world\n err\n done\n" to the stdout
 	.spawn(['echo hello', 'echo world'], 'echo err >&2', ['sleep 0', 'echo done && exit 0'])
 	.then(function(code) {
+	        //see below
 		expect(this.data.err[0]).to.equal('err')
-
+		
 		return spawner.spawn('echo next')
 	})
 	.then(function(code) {
 		expect(this.data.out[0]).to.equal('next')
 	})
 ```
+
+Every data streamed from the spawn running script is pushed in an array that is accessible through `this.data`. This object contains two arrays : `{err: Array, out: Array}`. It is intendend to check `stdout/stderr` results when the script has run. 
+To get a live data feed, use streams!
 
 ## API
 
