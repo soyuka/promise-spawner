@@ -1,11 +1,14 @@
 {
   "name": "promise-spawner",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Promise multiple spawner with stdout/stderr streams and error handling",
   "main": "index.js",
   "dependencies": {
     "bluebird": "~1.2.4",
     "through2": "~0.4.2"
+  },
+  { 
+    "engines" : { "node" : ">=0.10.3 <0.12" } 
   },
   "devDependencies": {
     "chai": "~1.9.1",
@@ -28,7 +31,7 @@
   "author": "soyuka",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/soyuka/spawner/issues"
+    "url": "https://github.com/soyuka/promise-spawner/issues"
   },
-  "homepage": "https://github.com/soyuka/spawner"
+  "homepage": "https://github.com/soyuka/promise-spawner"
 }
