@@ -2,6 +2,7 @@ var spawn = require('child_process').spawn
   , through = require('through2')
   , Promise = require('bluebird')
   , platform = require('os').platform()
+  , eol = require('os').EOL
 
 /**
  * Spawner - a wrapper to promised spawn
@@ -21,10 +22,10 @@ var Spawner = function(options, spawn_options) {
 
 	//those are global streams to allow piping of the current running spawn
 	self.out = this.pipe().on('data', function(d) { 
-		self.data.out.push(new Buffer(d).toString().replace('\n', '')) 
+		self.data.out.push(new Buffer(d).toString().replace(eol, '')) 
 	})
 	self.err = this.pipe().on('data', function(d) {
-		self.data.err.push(new Buffer(d).toString().replace('\n', ''))
+		self.data.err.push(new Buffer(d).toString().replace(eol, ''))
 	})
 
 	var spawn = function() {
