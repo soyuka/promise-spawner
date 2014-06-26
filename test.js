@@ -3,158 +3,158 @@ var assert = require('chai').assert
 var Spawner = require('./')
 
 var spawner = new Spawner({
-	out: function(d) {
-		return d;
-	},
-	err: function(d) {
-		return d;
-	}
+  out: function(d) {
+    return d;
+  },
+  err: function(d) {
+    return d;
+  }
 })
 
 describe('Spawner', function() {
-	it('should resolve', function(cb) {
-		var s = spawner.sp('echo OK')
+  it('should resolve', function(cb) {
+    var s = spawner.sp('echo OK')
 
-		s
-		.then(function(code) {
-			expect(code).to.equal(0)
-			expect(this.data.out[0]).to.equal('OK')
-			cb()
-		})
-		.catch(function(code) {
-			assert(code, 'This should not be called')
-		})
-	})
+    s
+    .then(function(code) {
+      expect(code).to.equal(0)
+      expect(this.data.out[0]).to.equal('OK')
+      cb()
+    })
+    .catch(function(code) {
+      assert(code, 'This should not be called')
+    })
+  })
 
-	it('should reject', function(cb) {
+  it('should reject', function(cb) {
 
-		var s = spawner.sp('echo OK && exit 1')
+    var s = spawner.sp('echo OK && exit 1')
 
-		s
-		.then(function(code) {
-			assert(code, 'This should not be called')
-		})
-		.catch(function(code) {
-			expect(code).to.equal(1)
-			expect(this.data.out[0]).to.equal('OK')
+    s
+    .then(function(code) {
+      assert(code, 'This should not be called')
+    })
+    .catch(function(code) {
+      expect(code).to.equal(1)
+      expect(this.data.out[0]).to.equal('OK')
 
-			cb()
-		})
-	})
+      cb()
+    })
+  })
 
-	it('should chain variadic', function(cb) {
+  it('should chain variadic', function(cb) {
 
-		var s = spawner.sp('echo OK', 'echo still ok')
+    var s = spawner.sp('echo OK', 'echo still ok')
 
-		s
-		.then(function(code) {
-			expect(code).to.equal(0)
-			expect(this.data.out).to.eql(['OK', 'still ok'])
-			cb()
-		})
-	})
+    s
+    .then(function(code) {
+      expect(code).to.equal(0)
+      expect(this.data.out).to.eql(['OK', 'still ok'])
+      cb()
+    })
+  })
 
-	it('should chain array', function(cb) {
+  it('should chain array', function(cb) {
 
-		var s = spawner.sp(['echo OK', 'echo OK2'], ['echo OK3'])
+    var s = spawner.sp(['echo OK', 'echo OK2'], ['echo OK3'])
 
-		s
-		.then(function(code) {
-			expect(code).to.equal(0)
-			expect(this.data.out).to.eql(['OK', 'OK2', 'OK3'])
-			cb()
-		})
-	})
+    s
+    .then(function(code) {
+      expect(code).to.equal(0)
+      expect(this.data.out).to.eql(['OK', 'OK2', 'OK3'])
+      cb()
+    })
+  })
 
-	it('should chain promises', function(cb) {
+  it('should chain promises', function(cb) {
 
-		var s = spawner.sp(['echo OK', 'echo OK2'], 'echo OK3')
+    var s = spawner.sp(['echo OK', 'echo OK2'], 'echo OK3')
 
-		s
-		.then(function(code) {
-			expect(code).to.equal(0)
-			expect(this.data.out).to.eql(['OK', 'OK2', 'OK3'])
-			return spawner.sp('echo OK4')
-		})
-		.then(function(code) {
-			expect(code).to.equal(0)
-			expect(this.data.out).to.eql(['OK4'])
+    s
+    .then(function(code) {
+      expect(code).to.equal(0)
+      expect(this.data.out).to.eql(['OK', 'OK2', 'OK3'])
+      return spawner.sp('echo OK4')
+    })
+    .then(function(code) {
+      expect(code).to.equal(0)
+      expect(this.data.out).to.eql(['OK4'])
 
-			cb()
-		})
-	})
+      cb()
+    })
+  })
 
-	it('should not send command after a reject', function(cb) {
+  it('should not send command after a reject', function(cb) {
 
-		var s = spawner.sp('echo OK', 'exit 1', 'echo still ok')
+    var s = spawner.sp('echo OK', 'exit 1', 'echo still ok')
 
-		s
-		.catch(function(code) {
-			expect(code).to.equal(1)
-			expect(this.data.out).to.eql(['OK'])
-			cb()
-		})
-	})
+    s
+    .catch(function(code) {
+      expect(code).to.equal(1)
+      expect(this.data.out).to.eql(['OK'])
+      cb()
+    })
+  })
 
-	it('should have change modifier err', function(cb) {
-		spawner = new Spawner({
-			err: function(d) {
-				return 'OMG there was an error\n'+d
-			}
-		})
+  it('should have change modifier err', function(cb) {
+    spawner = new Spawner({
+      err: function(d) {
+        return 'OMG there was an error\n'+d
+      }
+    })
 
-		spawner.sp('echo string >&2').then(function(code) {
-			expect(code).to.equal(0)
-			expect(this.data.err[0]).to.contain('OMG there was an error')
-			cb()
-		})
-	})
+    spawner.sp('echo string >&2').then(function(code) {
+      expect(code).to.equal(0)
+      expect(this.data.err[0]).to.contain('OMG there was an error')
+      cb()
+    })
+  })
 
-	it('should change modified', function(cb) {
-		spawner = new Spawner({out: 'this is good: ', err: 'this is bad: '})
+  it('should change modified', function(cb) {
+    spawner = new Spawner({out: 'this is good: ', err: 'this is bad: '})
 
-		spawner.sp('echo string').then(function(code) {
-			expect(code).to.equal(0)
-			expect(this.data.out[0]).to.equal('this is good: string')
-			cb()
-		})
-	})
+    spawner.sp('echo string').then(function(code) {
+      expect(code).to.equal(0)
+      expect(this.data.out[0]).to.equal('this is good: string')
+      cb()
+    })
+  })
 
-	it('should get stderr', function(cb) {
-		spawner.sp('echo something >&2').then(function(code) {
-			expect(code).to.equal(0)
-			expect(this.data.err[0]).to.equal('this is bad: something')
-			cb()
-		})
-	})
+  it('should get stderr', function(cb) {
+    spawner.sp('echo something >&2').then(function(code) {
+      expect(code).to.equal(0)
+      expect(this.data.err[0]).to.equal('this is bad: something')
+      cb()
+    })
+  })
 
-	it('should write on stderr', function(cb) {
-		spawner = new Spawner({out: 'out: '})
+  it('should write on stderr', function(cb) {
+    spawner = new Spawner({out: 'out: '})
 
-		var s = spawner.sp('sleep 0')
+    var s = spawner.sp('sleep 0')
 
-		spawner.err.write('test')
+    spawner.err.write('test')
 
-		s.then(function(code) {
-			expect(code).to.equal(0)
-			expect(this.data.err[0]).to.equal('test')
-			cb()
-		})
-	})
+    s.then(function(code) {
+      expect(code).to.equal(0)
+      expect(this.data.err[0]).to.equal('test')
+      cb()
+    })
+  })
 
-	it('should pipe on stdout', function(cb) {
-		spawner = new Spawner({out: '', err: ''})
+  it('should pipe on stdout', function(cb) {
+    spawner = new Spawner({out: '', err: ''})
 
-		var s = spawner.sp('echo "something"', 'echo "something else"')
+    var s = spawner.sp('echo "something"', 'echo "something else"')
 
-		spawner.err.pipe(process.stdout)
-		spawner.out.pipe(process.stdout)
+    spawner.err.pipe(process.stdout)
+    spawner.out.pipe(process.stdout)
 
-		s.then(function(code) {
-			expect(code).to.equal(0)
-			expect(this.data.out).to.eql(['something', 'something else'])
-			cb()
-		})
-	})
+    s.then(function(code) {
+      expect(code).to.equal(0)
+      expect(this.data.out).to.eql(['something', 'something else'])
+      cb()
+    })
+  })
 
 })
