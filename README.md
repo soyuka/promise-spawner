@@ -70,6 +70,7 @@ To get a live data feed, use streams!
 - `options`: modifiers: `{out: Function|String, err: Function|String}`
 - `spawn_options` (optional): [http://nodejs.org/api/child_process.html](http://nodejs.org/api/child_process.html)
 - returns an object: 
+  - `spawn`: spawn a command
   - `sp`:  shortcut to spawn
   - `out`: global out stream
   - `err`: global err stream
