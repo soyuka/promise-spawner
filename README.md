@@ -79,7 +79,7 @@ To get a live data feed, use streams!
 ## API
 
 ```javascript
-Spawner(options, spawn_options)
+Spawner([options], [spawn_options])
 ```
 - `options`: modifiers: `{out: Function|String, err: Function|String}`
 - `spawn_options` (optional): [http://nodejs.org/api/child_process.html](http://nodejs.org/api/child_process.html)
@@ -93,7 +93,7 @@ Spawner(options, spawn_options)
 spawner.spawn(...commands, [spawn_options]) or spawner.sp(...commands, [spawn_options])
 ```
 - `command` can be an Array or a String 
-- `spawn_options`: [http://nodejs.org/api/child_process.html](http://nodejs.org/api/child_process.html)
+- `spawn_options` (optional): [http://nodejs.org/api/child_process.html](http://nodejs.org/api/child_process.html)
 - returns a `Promise` ([https://github.com/petkaantonov/bluebird/](bluebird))
 
 Take a look at the [https://github.com/soyuka/promise-spawner/blob/master/test/index.js](tests)
