@@ -17,7 +17,7 @@ spawner
 		//to access out/err datas use
 		console.log(this.data.out, this.data.err)
 		//with this example, this.data.out will look like this:
-		expect(this.data.out).to.eql(['out: hello', 'out: world'])
+		expect(this.data.out).to.eql(['hello', 'world'])
 	})
 ```
 
@@ -59,6 +59,18 @@ spawner
 	.then(function(code) {
 		expect(this.data.out[0]).to.equal('next')
 	})
+
+```
+
+### Add options on the fly
+
+```
+var previous = require('path').resolve(__dirname, '../')
+var s = spawner.sp('echo $(pwd)"/$SP"', {env: {SP: 'test'}, cwd: previous}) 
+
+s.then(function(code) {
+  expect(this.data.out[0]).to.equal(__dirname)
+})
 ```
 
 Every data streamed from the spawn running script is pushed in an array that is accessible through `this.data`. This object contains two arrays : `{err: Array, out: Array}`. It is intendend to check `stdout/stderr` results when the script has run. 
