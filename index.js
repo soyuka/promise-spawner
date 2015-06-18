@@ -2,13 +2,14 @@ var spawn = require('child_process').spawn
   , through = require('through2')
   , Promise = require('bluebird')
   , platform = require('os').platform()
+  , util = require('util')
   , eol = require('os').EOL
 
 /**
  * Spawner - a wrapper to promised spawn
  * @param  {Object}  options        modifiers {out: Function|string, err: Function|string}
  * @param  {Object}  spawn_options  options to spawn process (nodejs.org/api/child_process.html)
- * @return {Object}  Wrapper        {sp = spawn = Promise, Stream out, Stream err}
+ * @return {Object}  Wrapper        {Promise sp = spawn, Stream out, Stream err}
  */
 var Spawner = function(options, spawn_options) {
 
@@ -31,7 +32,14 @@ var Spawner = function(options, spawn_options) {
   var spawn = function() {
 
     var args = [].slice.call(arguments)
-        args = [].concat.apply([], args) //flatten
+
+    var last = args.length - 1
+
+    if(!util.isArray(args[last]) && typeof args[last] == 'object') {
+      var options = args.pop()
+    }
+
+    args = [].concat.apply([], args) //flatten
 
     var num_commands = args.length
         , commands = []
@@ -41,7 +49,7 @@ var Spawner = function(options, spawn_options) {
       commands.push({
         command: self.command,
         args: self.args.concat([args[i]]),
-        options: spawn_options || {}
+        options: options || spawn_options || {}
       })
     }
 
@@ -52,7 +60,8 @@ var Spawner = function(options, spawn_options) {
       var j = 0
 
       //function to loop through promises commands
-      //doing like this to handle the catch promise when previous command fail and to reject spawner global promise
+      //This handles the catch promise when a command fail
+      //Then, we can reject the spawner global promise
       var loop = function(array) {
         var command = array.shift()
 
@@ -87,7 +96,6 @@ var Spawner = function(options, spawn_options) {
 }
 
 Spawner.prototype = {
-  //directly from nodejs exec code, allows to run string commands with ease
   command: platform == 'win32' ? 'cmd.exe' : 'sh',
   args: platform == 'win32' ? ['/s', '/c'] : ['-c'],
   /**
@@ -105,13 +113,13 @@ Spawner.prototype = {
 
       //spawn stdout to the Stream modifier
       //writes data back to global Stream
-      s.stdout
+      s.stdout && s.stdout
         .pipe(self.pipe(options.out))
         .on('data', function(d) {
           self.out.write(d)
         })
 
-      s.stderr
+      s.stderr && s.stderr
         .pipe(self.pipe(options.err))
         .on('data', function(d) {
           self.err.write(d)

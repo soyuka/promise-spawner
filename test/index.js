@@ -1,12 +1,9 @@
 var expect = require('chai').expect
 var assert = require('chai').assert
-var Spawner = require('./')
+var Spawner = require('..')
 
 var spawner = new Spawner({
   out: function(d) {
-    return d;
-  },
-  err: function(d) {
     return d;
   }
 })
@@ -157,4 +154,25 @@ describe('Spawner', function() {
     })
   })
 
+  it('should get options as last arguments', function(cb) {
+    spawner = new Spawner({out: '', err: ''})
+    var s = spawner.sp('echo $TEST', {env: {TEST: 'hello'}}) 
+
+    s.then(function(code) {
+      expect(code).to.equal(0)
+      expect(this.data.out[0]).to.equal('hello')
+      cb()
+    })
+  })
+
+  it('should call a detached spawn with stdio: "ignore"', function(cb) {
+    spawner = new Spawner({out: '', err: ''})
+    var s = spawner.sp('echo "hi"', {stdio: 'ignore', detached: true}) 
+
+    s.then(function(code) {
+      expect(code).to.equal(0)
+      expect(this.data.out).to.eql([])
+      cb()
+    })
+  })
 })
