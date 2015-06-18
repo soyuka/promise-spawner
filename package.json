@@ -12,7 +12,8 @@
     "mocha": "~1.19.0"
   },
   "scripts": {
-    "test": "mocha test.js"
+    "test": "mocha --reporter spec",
+    "coverage": "istanbul cover _mocha"
   },
   "repository": {
     "type": "git",
