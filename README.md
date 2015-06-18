@@ -67,14 +67,19 @@ To get a live data feed, use streams!
 ## API
 
 #### `Spawner(options, spawn_options)`
-- options: modifiers: `{out: Function|String, err: Function|String}`
-- spawn_options: [http://nodejs.org/api/child_process.html](http://nodejs.org/api/child_process.html)
+- `options`: modifiers: `{out: Function|String, err: Function|String}`
+- `spawn_options` (optional): [http://nodejs.org/api/child_process.html](http://nodejs.org/api/child_process.html)
+- returns an object: 
+  - `sp`:  shortcut to spawn
+  - `out`: global out stream
+  - `err`: global err stream
 
-#### `new Spawner()` 
-- spawn: `Function(command, ...)` where `command` can be an Array or a String - returns a `Promise`
-- sp: shortcut to spawn
-- out: global out stream
-- err: global err stream
+#### `spawner.spawn(...commands, [spawn_options]) or spawner.sp(...commands, [spawn_options])`
+- `command` can be an Array or a String 
+- `spawn_options`: [http://nodejs.org/api/child_process.html](http://nodejs.org/api/child_process.html)
+- returns a `Promise` ([https://github.com/petkaantonov/bluebird/](bluebird))
+
+Take a look at the [https://github.com/soyuka/promise-spawner/blob/master/test/index.js](tests)
 
 ## Licence
 
