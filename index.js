@@ -14,7 +14,7 @@ var spawn = require('child_process').spawn
 var Spawner = function(options, spawn_options) {
 
   var self = this
-  var opt = {out: 'out: ', err: 'err: '}
+  var opt = {}
 
   if(typeof options == 'object') {
     opt.out = options.out !== undefined ? options.out : opt.out
