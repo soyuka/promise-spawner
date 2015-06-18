@@ -78,7 +78,9 @@ To get a live data feed, use streams!
 
 ## API
 
-#### `Spawner(options, spawn_options)`
+```javascript
+Spawner(options, spawn_options)
+```
 - `options`: modifiers: `{out: Function|String, err: Function|String}`
 - `spawn_options` (optional): [http://nodejs.org/api/child_process.html](http://nodejs.org/api/child_process.html)
 - returns an object: 
@@ -87,7 +89,9 @@ To get a live data feed, use streams!
   - `out`: global out stream
   - `err`: global err stream
 
-#### `spawner.spawn(...commands, [spawn_options]) or spawner.sp(...commands, [spawn_options])`
+```javascript
+spawner.spawn(...commands, [spawn_options]) or spawner.sp(...commands, [spawn_options])
+```
 - `command` can be an Array or a String 
 - `spawn_options`: [http://nodejs.org/api/child_process.html](http://nodejs.org/api/child_process.html)
 - returns a `Promise` ([https://github.com/petkaantonov/bluebird/](bluebird))
