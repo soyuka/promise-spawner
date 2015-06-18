@@ -175,4 +175,17 @@ describe('Spawner', function() {
       cb()
     })
   })
+
+  it('should be in a new cwd', function(cb) {
+    spawner = new Spawner({out: '', err: ''})
+
+    var previous = require('path').resolve(__dirname, '../')
+    var s = spawner.sp('echo $(pwd)"/$SP"', {env: {SP: 'test'}, cwd: previous}) 
+
+    s.then(function(code) {
+      expect(code).to.equal(0)
+      expect(this.data.out[0]).to.equal(__dirname)
+      cb()
+    })
+  })
 })
