@@ -1,7 +1,7 @@
 promise-spawner [![Build Status](https://travis-ci.org/soyuka/promise-spawner.svg?branch=master)](https://travis-ci.org/soyuka/promise-spawner)
 ===============
 
-Promise multiple spawner with stdout/stderr streams and error handling
+Lazy nodejs spawner with stdout/stderr streams and error handling through promises
 
 ## Examples
 
