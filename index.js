@@ -22,11 +22,16 @@ var Spawner = function(options, spawn_options) {
   }
 
   //those are global streams to allow piping of the current running spawn
-  self.out = this.pipe().on('data', function(d) {
-    self.data.out.push(d)
+  self.out = through.obj(function (chunk, enc, callback) {
+    this.push(chunk)
+    self.data.out.push(chunk)
+    return callback()
   })
-  self.err = this.pipe().on('data', function(d) {
-    self.data.err.push(d)
+
+  self.err = through.obj(function (chunk, enc, callback) {
+    this.push(chunk)
+    self.data.err.push(chunk)
+    return callback()
   })
 
   var spawn = function() {

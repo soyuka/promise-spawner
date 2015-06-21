@@ -2,11 +2,7 @@ var expect = require('chai').expect
 var assert = require('chai').assert
 var Spawner = require('..')
 
-var spawner = new Spawner({
-  out: function(d) {
-    return d;
-  }
-})
+var spawner = new Spawner()
 
 describe('Spawner', function() {
   it('should resolve', function(cb) {
