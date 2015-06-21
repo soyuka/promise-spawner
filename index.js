@@ -23,10 +23,10 @@ var Spawner = function(options, spawn_options) {
 
   //those are global streams to allow piping of the current running spawn
   self.out = this.pipe().on('data', function(d) {
-    self.data.out.push(new Buffer(d).toString().replace(eol, ''))
+    self.data.out.push(d)
   })
   self.err = this.pipe().on('data', function(d) {
-    self.data.err.push(new Buffer(d).toString().replace(eol, ''))
+    self.data.err.push(d)
   })
 
   var spawn = function() {
@@ -138,7 +138,7 @@ Spawner.prototype = {
     modifier = modifier === undefined ? '' : modifier
 
     return through.obj(function (chunk, enc, callback) {
-      chunk = typeof modifier == 'function' ? modifier(chunk) : modifier + chunk
+      chunk = typeof modifier == 'function' ? modifier(chunk) : modifier + chunk.toString().replace(eol, '')
       this.push(chunk)
       callback()
     })
