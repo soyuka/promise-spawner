@@ -4,11 +4,11 @@
   "description": "Lazy nodejs spawner with stdout/stderr streams and error handling through promises",
   "main": "index.js",
   "dependencies": {
-    "through2": "~0.4.2"
+    "through2": "~2.0.3"
   },
   "devDependencies": {
-    "chai": "~1.9.1",
-    "mocha": "~1.19.0"
+    "chai": "~3.5.0",
+    "mocha": "~3.4.2"
   },
   "scripts": {
     "test": "mocha --reporter spec",

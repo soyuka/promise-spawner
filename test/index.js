@@ -5,17 +5,13 @@ var Spawner = require('..')
 var spawner = new Spawner()
 
 describe('Spawner', function() {
-  it('should resolve', function(cb) {
+  it('should resolve', function() {
     var s = spawner.sp('echo OK')
 
-    s
-    .then(function(code) {
+    return s
+    .then(function({code, data}) {
       expect(code).to.equal(0)
-      expect(this.data.out[0]).to.equal('OK')
-      cb()
-    })
-    .catch(function(code) {
-      assert(code, 'This should not be called')
+      expect(data.out[0]).to.equal('OK')
     })
   })
 
@@ -24,12 +20,12 @@ describe('Spawner', function() {
     var s = spawner.sp('echo OK && exit 1')
 
     s
-    .then(function(code) {
+    .then(function({code, data}) {
       assert(code, 'This should not be called')
     })
-    .catch(function(code) {
+    .catch(function({code, data}) {
       expect(code).to.equal(1)
-      expect(this.data.out[0]).to.equal('OK')
+      expect(data.out[0]).to.equal('OK')
 
       cb()
     })
@@ -40,9 +36,9 @@ describe('Spawner', function() {
     var s = spawner.sp('echo OK', 'echo still ok')
 
     s
-    .then(function(code) {
+    .then(function({code, data}) {
       expect(code).to.equal(0)
-      expect(this.data.out).to.eql(['OK', 'still ok'])
+      expect(data.out).to.eql(['OK', 'still ok'])
       cb()
     })
   })
@@ -52,9 +48,9 @@ describe('Spawner', function() {
     var s = spawner.sp(['echo OK', 'echo OK2'], ['echo OK3'])
 
     s
-    .then(function(code) {
+    .then(function({code, data}) {
       expect(code).to.equal(0)
-      expect(this.data.out).to.eql(['OK', 'OK2', 'OK3'])
+      expect(data.out).to.eql(['OK', 'OK2', 'OK3'])
       cb()
     })
   })
@@ -64,14 +60,14 @@ describe('Spawner', function() {
     var s = spawner.sp(['echo OK', 'echo OK2'], 'echo OK3')
 
     s
-    .then(function(code) {
+    .then(function({code, data}) {
       expect(code).to.equal(0)
-      expect(this.data.out).to.eql(['OK', 'OK2', 'OK3'])
+      expect(data.out).to.eql(['OK', 'OK2', 'OK3'])
       return spawner.sp('echo OK4')
     })
-    .then(function(code) {
+    .then(function({code, data}) {
       expect(code).to.equal(0)
-      expect(this.data.out).to.eql(['OK4'])
+      expect(data.out).to.eql(['OK4'])
 
       cb()
     })
@@ -82,9 +78,9 @@ describe('Spawner', function() {
     var s = spawner.sp('echo OK', 'exit 1', 'echo still ok')
 
     s
-    .catch(function(code) {
+    .catch(function({code, data}) {
       expect(code).to.equal(1)
-      expect(this.data.out).to.eql(['OK'])
+      expect(data.out).to.eql(['OK'])
       cb()
     })
   })
@@ -96,9 +92,9 @@ describe('Spawner', function() {
       }
     })
 
-    spawner.sp('echo string >&2').then(function(code) {
+    spawner.sp('echo string >&2').then(function({code, data}) {
       expect(code).to.equal(0)
-      expect(this.data.err[0]).to.contain('OMG there was an error')
+      expect(data.err[0]).to.contain('OMG there was an error')
       cb()
     })
   })
@@ -106,17 +102,17 @@ describe('Spawner', function() {
   it('should change modified', function(cb) {
     spawner = new Spawner({out: 'this is good: ', err: 'this is bad: '})
 
-    spawner.sp('echo string').then(function(code) {
+    spawner.sp('echo string').then(function({code, data}) {
       expect(code).to.equal(0)
-      expect(this.data.out[0]).to.equal('this is good: string')
+      expect(data.out[0]).to.equal('this is good: string')
       cb()
     })
   })
 
   it('should get stderr', function(cb) {
-    spawner.sp('echo something >&2').then(function(code) {
+    spawner.sp('echo something >&2').then(function({code, data}) {
       expect(code).to.equal(0)
-      expect(this.data.err[0]).to.equal('this is bad: something')
+      expect(data.err[0]).to.equal('this is bad: something')
       cb()
     })
   })
@@ -128,9 +124,9 @@ describe('Spawner', function() {
 
     spawner.err.write('test')
 
-    s.then(function(code) {
+    s.then(function({code, data}) {
       expect(code).to.equal(0)
-      expect(this.data.err[0]).to.equal('test')
+      expect(data.err[0]).to.equal('test')
       cb()
     })
   })
@@ -143,31 +139,31 @@ describe('Spawner', function() {
     spawner.err.pipe(process.stdout)
     spawner.out.pipe(process.stdout)
 
-    s.then(function(code) {
+    s.then(function({code, data}) {
       expect(code).to.equal(0)
-      expect(this.data.out).to.eql(['something', 'something else'])
+      expect(data.out).to.eql(['something', 'something else'])
       cb()
     })
   })
 
   it('should get options as last arguments', function(cb) {
     spawner = new Spawner({out: '', err: ''})
-    var s = spawner.sp('echo $TEST', {env: {TEST: 'hello'}}) 
+    var s = spawner.sp('echo $TEST', {env: {TEST: 'hello'}})
 
-    s.then(function(code) {
+    s.then(function({code, data}) {
       expect(code).to.equal(0)
-      expect(this.data.out[0]).to.equal('hello')
+      expect(data.out[0]).to.equal('hello')
       cb()
     })
   })
 
   it('should call a detached spawn with stdio: "ignore"', function(cb) {
     spawner = new Spawner({out: '', err: ''})
-    var s = spawner.sp('echo "hi"', {stdio: 'ignore', detached: true}) 
+    var s = spawner.sp('echo "hi"', {stdio: 'ignore', detached: true})
 
-    s.then(function(code) {
+    s.then(function({code, data}) {
       expect(code).to.equal(0)
-      expect(this.data.out).to.eql([])
+      expect(data.out).to.eql([])
       cb()
     })
   })
@@ -176,12 +172,16 @@ describe('Spawner', function() {
     spawner = new Spawner({out: '', err: ''})
 
     var previous = require('path').resolve(__dirname, '../')
-    var s = spawner.sp('echo $(pwd)"/$SP"', {env: {SP: 'test'}, cwd: previous}) 
+    var s = spawner.sp('echo $(pwd)"/$SP"', {env: {SP: 'test'}, cwd: previous})
 
-    s.then(function(code) {
+    s.then(function({code, data}) {
       expect(code).to.equal(0)
-      expect(this.data.out[0]).to.equal(__dirname)
+      expect(data.out[0]).to.equal(__dirname)
       cb()
     })
   })
+})
+
+process.on('unhandledRejection', function(e) {
+  console.error(e.stack)
 })
