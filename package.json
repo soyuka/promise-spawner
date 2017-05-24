@@ -4,7 +4,6 @@
   "description": "Lazy nodejs spawner with stdout/stderr streams and error handling through promises",
   "main": "index.js",
   "dependencies": {
-    "bluebird": "~1.2.4",
     "through2": "~0.4.2"
   },
   "devDependencies": {

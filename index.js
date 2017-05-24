@@ -1,9 +1,8 @@
 var spawn = require('child_process').spawn
-  , through = require('through2')
-  , Promise = require('bluebird')
-  , platform = require('os').platform()
-  , util = require('util')
-  , eol = require('os').EOL
+var through = require('through2')
+var platform = require('os').platform()
+var util = require('util')
+var eol = require('os').EOL
 
 /**
  * Spawner - a wrapper to promised spawn
